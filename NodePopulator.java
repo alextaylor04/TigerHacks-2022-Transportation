@@ -1,10 +1,10 @@
 import javax.imageio.ImageIO;
 import java.awt.image.Raster;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.nio.file.Path;
+import java.util.*;
 
 public class NodePopulator {
 
@@ -17,18 +17,21 @@ public class NodePopulator {
     public NodePopulator(String imagePath, int[]... acceptableValues) {
         this.imagePath = imagePath;
         Collections.addAll(acceptableRGBValues, acceptableValues);
+
+        fillValues();
     }
 
     private void fillValues() {
         try {
-            Raster raster = ImageIO.read(new URL("file.png")).getData();
+            Raster raster = ImageIO.read(Path.of(imagePath).toUri().toURL()).getData();
 
-            for (int x = 0; x < 1920; x++) {
-                for (int y = 0; y < 1080; y++) {
+            for (int x = 0; x < 805; x++) {
+                for (int y = 0; y < 455; y++) {
 
-                    int[] rgb = new int[4];
-                    raster.getPixel(x, y, rgb);
-                    TRANSVERSABLE_NODES[x][y] = isRGBMatch(rgb) ? new TransversableNode(x, y) : null;
+                    int[] rgb = raster.getPixel(x, y, new int[4]);
+                    if (isRGBMatch(rgb)) {
+                        TRANSVERSABLE_NODES[x][y] = new TransversableNode(x, y);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -37,7 +40,11 @@ public class NodePopulator {
     }
 
     private boolean isRGBMatch(int[] rgb) {
-        return acceptableRGBValues.stream().anyMatch(acceptableRGB -> rgb == acceptableRGB);
+        return acceptableRGBValues.stream().anyMatch(acceptableRGB -> {
+
+            System.out.println("Acceptable: " + Arrays.toString(acceptableRGB) + "\nRGB: " + Arrays.toString(rgb));
+            return Arrays.equals(acceptableRGB, rgb);
+        });
     }
 
 }
