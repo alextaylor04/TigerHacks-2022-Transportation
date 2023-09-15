@@ -21,13 +21,13 @@ public class Main {
     }
 
     private static void route(Renderer renderer) {
-        new NodePopulator("Map.png", new int[]{153,153,153,255});
+        new NodePopulator("Map.png", new int[]{153,153,153,255}, new int[]{153,153,143,255});
 
         Map<String, Set<String>> roadConnections = new HashMap<>();
 
         Set<TransversableNode> allNodes = new HashSet<>();
 
-        TransversableNode from = NodePopulator.TRANSVERSABLE_NODES[81][61], to = NodePopulator.TRANSVERSABLE_NODES[110][65];
+        TransversableNode from = NodePopulator.TRANSVERSABLE_NODES[308][133], to = NodePopulator.TRANSVERSABLE_NODES[755][347];
 
         Random r = new Random();
 
@@ -42,9 +42,9 @@ public class Main {
 
                 for (TransversableNode surroundingNode : node.surroundingNodes()) {
                     if (surroundingNode == null) continue;
-                    nodeConnections.add(surroundingNode.getX() + "," + surroundingNode.getY());
+                    nodeConnections.add(surroundingNode.getID());
                 }
-                roadConnections.put(x + "," + y, nodeConnections);
+                roadConnections.put(node.getID(), nodeConnections);
 
                 allNodes.add(node);
             }

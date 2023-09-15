@@ -37,6 +37,11 @@ public class TransversableNode implements GraphNode {
     }
 
     @Override
+    public String toString() {
+        return getID();
+    }
+
+    @Override
     public String getID() {
         return x + "," + y;
     }

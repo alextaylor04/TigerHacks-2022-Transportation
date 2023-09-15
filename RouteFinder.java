@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RouteFinder<T extends GraphNode> {
     private final Graph<T> graph;
@@ -23,8 +24,12 @@ public class RouteFinder<T extends GraphNode> {
 
         //Iteration Process
         while(!openSet.isEmpty()) {
+            System.out.println("Open Set contains: " + openSet.stream().map(RouteNode::getCurrent).collect(Collectors.toSet()));
             RouteNode<T> next = openSet.poll();
+
+            System.out.println("Looking at node: " + next);
             if (next.getCurrent().equals(to)) {
+                System.out.println("Found destination");
                 List<T> route = new ArrayList<>();
 
                 RouteNode<T> current = next;
@@ -32,6 +37,7 @@ public class RouteFinder<T extends GraphNode> {
                     route.add(0, current.getCurrent());
                     current = allNodes.get(current.getPrevious());
                 }
+                System.out.println(route);
                 return route;
 
             }
@@ -46,12 +52,14 @@ public class RouteFinder<T extends GraphNode> {
                     node.setRouteScore(computeNewScore);
                     node.setEstimatedScore(computeNewScore + targetScorer.cost(connection, to));
                     openSet.add(node);
+                    System.out.println("Found a better route to node: " + node);
                 }
             }
 
 
         }
-        return null;
+
+        throw new IllegalStateException("No route found");
 
     }
 
