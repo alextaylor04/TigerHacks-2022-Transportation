@@ -7,6 +7,7 @@ public class RouteNode<T extends GraphNode> implements Comparable<RouteNode> {
     public RouteNode(T current) {
         this(current, null, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
+
     public RouteNode(T current, T previous, double routeScore, double estimatedScore) {
         this.current = current;
         this.previous = previous;

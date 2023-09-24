@@ -2,58 +2,71 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TimerTask;
 
 public class Renderer extends TimerTask {
 
     private final Canvas canvas;
-    private final Image map = new ImageIcon("Map.png").getImage();
+    private Image map = new ImageIcon("Map.png").getImage();
+    private int counter = 0;
 
     private List<TransversableNode> route;
 
     public Renderer(Canvas canvas) {
         this.canvas = canvas;
+        renderImage(map);
     }
 
     @Override
     public void run() {
+        if (counter == 5) {
+            renderImage(map);
+            counter = 0;
+        }
         render();
+        counter++;
     }
 
     private void render() {
-        BufferStrategy bs = canvas.getBufferStrategy();
-        if(bs == null) {
-            canvas.createBufferStrategy(3);
-            return;
-        }
-
-        Graphics g = bs.getDrawGraphics();
-
-
-        System.out.println(route);
         if (route != null && !route.isEmpty()) {
             for (TransversableNode node : route) {
-                int x = Integer.parseInt(node.getID().split(",")[0]);
-                int y = Integer.parseInt(node.getID().split(",")[1]);
+                int i = Integer.parseInt(node.getID().split(",")[0]);
+                int j = Integer.parseInt(node.getID().split(",")[1]);
 
+                int offset = 5;
                 BufferedImage image = ImageUtil.toBufferedImage(map);
-                WritableRaster raster = image.getRaster();
+                for (int x = i; x < i + offset; x++) {
+                    for (int y = j; y < j + offset; y++) {
+                        image.setRGB(x, y, Color.RED.getRGB());
+                    }
+                }
 
-                raster.setPixel(x, y, new int[]{255,0,0,255});
+                map = image;
+                renderImage(image);
             }
-        } else {
-
+            route = null;
         }
-        g.drawImage(map, 0, 0, null);
-        g.dispose();
-        bs.show();
     }
 
     public void setRoute(List<TransversableNode> route) {
         this.route = route;
+    }
+
+    private void renderImage(Image image) {
+        BufferStrategy bs = canvas.getBufferStrategy();
+        if(bs == null) {
+            canvas.createBufferStrategy(3);
+            bs = canvas.getBufferStrategy();
+        }
+
+        Graphics g = bs.getDrawGraphics();
+
+        g.drawImage(image, 0, 0, null);
+
+        bs.show();
+
+        g.dispose();
+
     }
 }

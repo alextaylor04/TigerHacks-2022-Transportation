@@ -8,31 +8,58 @@ public class Main {
 
         MapWindow window = new MapWindow();
 
-//        Thread thread = new Thread();
-//        thread.start();
-
         Renderer renderer = new Renderer(window);
 
         Timer timer = new Timer("Timer");
         timer.schedule(renderer, 0, 1000L);
+
+        new NodePopulator("Map.png", 15, new int[]{153,153,153});
 
         route(renderer);
 
     }
 
     private static void route(Renderer renderer) {
-        new NodePopulator("Map.png", new int[]{153,153,153,255}, new int[]{153,153,143,255});
 
+        QuickestPathScorer<TransversableNode> quickestPathScorer = new QuickestPathScorer<>();
+
+        TransversableNode from = null, to = null;
+
+        int width = NodePopulator.TRANSVERSABLE_NODES.length;
+        int height = NodePopulator.TRANSVERSABLE_NODES[0].length;
+
+        Random r = new Random();
+
+        int maxDistance = 500;
+        while (from == null || to == null || quickestPathScorer.cost(from, to) > maxDistance) {
+            int x = r.nextInt(width);
+            int y = r.nextInt(height);
+            TransversableNode node = NodePopulator.TRANSVERSABLE_NODES[x][y];
+            if (from == null) {
+                from = node;
+                continue;
+            }
+            to = node;
+        }
+
+        System.out.println("From: (" + from.getX() + "," + from.getY() + ")");
+        System.out.println("To: (" + to.getX() + "," + to.getY() + ")");
+
+        RouteFinder<TransversableNode> finder = new RouteFinder<>(transversableNodeGraph(width, height), quickestPathScorer, quickestPathScorer);
+
+
+        List<TransversableNode> nodes = finder.findRoute(from, to);
+        renderer.setRoute(nodes);
+
+    }
+
+    private static Graph<TransversableNode> transversableNodeGraph(int width, int height) {
         Map<String, Set<String>> roadConnections = new HashMap<>();
 
         Set<TransversableNode> allNodes = new HashSet<>();
 
-        TransversableNode from = NodePopulator.TRANSVERSABLE_NODES[308][133], to = NodePopulator.TRANSVERSABLE_NODES[755][347];
-
-        Random r = new Random();
-
-        for (int x = 0; x < 805; x++) {
-            for (int y = 0; y < 455; y++) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
 
                 Set<String> nodeConnections = new HashSet<>();
 
@@ -50,15 +77,8 @@ public class Main {
             }
         }
 
-        QuickestPathScorer<TransversableNode> quickestPathScorer = new QuickestPathScorer<>();
-
-
-        RouteFinder<TransversableNode> finder = new RouteFinder<>(new Graph<>(allNodes, roadConnections), quickestPathScorer, quickestPathScorer);
-
-
-        List<TransversableNode> nodes = finder.findRoute(from, to);
-        renderer.setRoute(nodes);
-
+        System.out.println(allNodes.size());
+        return new Graph<>(allNodes, roadConnections);
     }
 
 

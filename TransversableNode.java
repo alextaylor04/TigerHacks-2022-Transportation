@@ -21,8 +21,8 @@ public class TransversableNode implements GraphNode {
 
         int xLowClamp = Math.max(0, x-1);
         int yLowClamp = Math.max(0, y-1);
-        int xHighClamp = Math.min(1919, x+1);
-        int yHighClamp = Math.min(1079, y+1);
+        int xHighClamp = Math.min(NodePopulator.TRANSVERSABLE_NODES.length - 1, x+1);
+        int yHighClamp = Math.min(NodePopulator.TRANSVERSABLE_NODES[0].length - 1, y+1);
 
         nodes[0] = NodePopulator.TRANSVERSABLE_NODES[xLowClamp][y];
         nodes[1] = NodePopulator.TRANSVERSABLE_NODES[x][yLowClamp];

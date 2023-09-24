@@ -6,8 +6,8 @@ public class MapWindow extends Canvas {
     public MapWindow() {
         JFrame frame = new JFrame("Map");
 
-        frame.setMinimumSize(new Dimension(1920, 1080));
-        frame.setMaximumSize(new Dimension(1920, 1080));
+        frame.setMinimumSize(new Dimension(1800, 1017));
+        frame.setMaximumSize(new Dimension(1800, 1017));
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
