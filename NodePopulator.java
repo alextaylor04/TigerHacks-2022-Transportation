@@ -40,11 +40,7 @@ public class NodePopulator {
     }
 
     private boolean isRGBMatch(int[] rgb) {
-        return acceptableRGBValues.stream().anyMatch(acceptableRGB -> {
-
-            System.out.println("Acceptable: " + Arrays.toString(acceptableRGB) + "\nRGB: " + Arrays.toString(rgb));
-            return Arrays.equals(acceptableRGB, rgb);
-        });
+        return acceptableRGBValues.stream().anyMatch(acceptableRGB -> Arrays.equals(acceptableRGB, rgb));
     }
 
 }
