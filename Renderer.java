@@ -32,17 +32,20 @@ public class Renderer extends TimerTask {
 
         Graphics g = bs.getDrawGraphics();
 
-
+        for (int x = 0; x < 200; x++) {
+            for (int y = 0; y < 200; y++) {
+                BufferedImage image = ImageUtil.toBufferedImage(map);
+                image.setRGB(x, y, Color.BLACK.getRGB());
+            }
+        }
 
         if (route != null && !route.isEmpty()) {
             for (TransversableNode node : route) {
                 int x = Integer.parseInt(node.getID().split(",")[0]);
                 int y = Integer.parseInt(node.getID().split(",")[1]);
 
-                BufferedImage image = ImageUtil.toBufferedImage(map);
-                WritableRaster raster = image.getRaster();
 
-                raster.setPixel(x, y, new int[]{255,255,255,255});
+
             }
         } else {
 
